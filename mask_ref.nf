@@ -9,12 +9,12 @@ def helpMessage() {
     Usage:
 
     nextflow run mask_ref.nf --help
-    nextflow run mask_ref.nf --test
+    nextflow run mask_ref.nf --test -profile test_docker
     nextflow run mask_ref.nf \
     --output_dir tests/data/output_dir \
-    --ref tests/data/reference/NC_000962_3.fasta \
+    --ref tests/data/reference/NC_000962_2.fasta \
     --mask true \
-    -with-docker compasscompact
+    -profile test_docker
 
     Mandatory arguments:
     --ref                    FILE         reference genome
