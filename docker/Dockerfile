@@ -1,9 +1,9 @@
 FROM ubuntu:16.04
 
-LABEL version="1.0.0" \
+LABEL version="1.0.2" \
      description="Oxford MMM CompassCompact Pipeline" \
      maintainer="crookscs.it@ndm.ox.ac.uk" \
-     dockerhub="oxfordmmm/compasscompact:v1.0.0"
+     dockerhub="oxfordmmm/compasscompact:v1.0.2"
 
 #Fresh update packages
 RUN apt-get update && \
