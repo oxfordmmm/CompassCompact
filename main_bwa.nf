@@ -3,30 +3,34 @@
 def helpMessage() {
     log.info"""
     =========================================
-                   MMM Compass Next 
+                   MMM Compass Compact 
     =========================================
     Usage:
 
-    nextflow run main.nf --help
-    nextflow run main.nf --test
-    nextflow run main.nf --input_dir tests/data/input_dir/fastqs/ \
+    nextflow run main_bwa.nf --help
+    nextflow run main_bwa.nf --test -profile test_docker
+    nextflow run main_bwa.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_3.fasta \
-    --mask_file = "tests/data/reference/NC_000962_3_repmask.array" \
+    --mask_file tests/data/reference/NC_000962_3_repmask.array \
     --fastq true \
-    --pattern "*_{1,2}P.fastq.gz"
+    --pattern "*_{1,2}.fastq.gz" \
+    -profile test_docker
 
-    nextflow run main.nf --input_dir tests/data/input_dir/bams/ \
+    nextflow run main_bwa.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_3.fasta \
-    --mask_file = "tests/data/reference/NC_000962_3_repmask.array" \
+    --mask_file tests/data/reference/NC_000962_3_repmask.array \
     --fastq false \
-    --pattern "*.bam"
+    --pattern "*.bam" \
+    -profile test_docker
 
     Mandatory arguments:
     --input_dir               DIR       path of fastq files, or bam files
     --fastq                   Boolean   Input files are fastq format
-    --pattern                 String    fastq file name pattern, such as "*_{1,2}P.fastq.gz"
+    --pattern                 String    fastq file name pattern, such as "*_{1,2}.fastq.gz"
     --output_dir              DIR       path for transformed fastq files
     --ref                     FILE      reference genome
     --mask_file               FILE      reference mask array
@@ -43,7 +47,7 @@ params.test = false;
 if (params.test){
     params.fastq = true
     params.pattern = "*_{1,2}.fastq.gz"
-    params.input_dir = "tests/data/input_dir/fastqs/"
+    params.input_dir = "tests/data/input_dir/"
     params.output_dir = "tests/data/output_dir"
     params.threads = 8
     params.ref = "tests/data/reference/NC_000962_3.fasta"
@@ -58,6 +62,12 @@ if (params.test){
     params.mask_file = ""
 }
 
+// Show help emssage
+if (params.help){
+    helpMessage()
+    exit 0
+}
+
 ref = file(params.ref)
 ref_folder = ref.getParent()
 ref_name = ref.getBaseName()
@@ -65,12 +75,6 @@ ref_name = ref.getBaseName()
 masked_ref = file(params.mask_file)
 masked_ref_folder = masked_ref.getParent()
 masked_ref_name = masked_ref.getBaseName()
-
-// Show help emssage
-if (params.help){
-    helpMessage()
-    exit 0
-}
 
 threads = params.threads
 data_path = params.input_dir + params.pattern
@@ -89,12 +93,12 @@ if (params.fastq == false){
         file bam_file from bam_files_channel
 
         output:
-        set val("${bam_file.getBaseName()}"), file("${bam_file.getBaseName()}_1P.fastq"), file("${bam_file.getBaseName()}_2P.fastq") into bwa_read_pairs
+        set val("${bam_file.getBaseName()}"), file("${bam_file.getBaseName()}_1.fastq"), file("${bam_file.getBaseName()}_2.fastq") into bwa_read_pairs
 
         """
         ${SAMTOOL1x}/samtools bam2fq \
-        -1 ${bam_file.getBaseName()}_1P.fastq \
-        -2 ${bam_file.getBaseName()}_2P.fastq \
+        -1 ${bam_file.getBaseName()}_1.fastq \
+        -2 ${bam_file.getBaseName()}_2.fastq \
         ${bam_file.getBaseName()}.bam
         """
     }

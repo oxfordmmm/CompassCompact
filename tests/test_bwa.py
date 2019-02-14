@@ -3,8 +3,8 @@
 2. Copy genomo reference fasta as tests/data/reference/NC_000962_3.fasta
 3. Copy genomo reference mask array as tests/data/reference/NC_000962_3_repmask.array
 4. Copy expected basecall output fasta to tests/data/test_output/expected_output
-    python3 tests/test_bwa.py bam -profile test_docker (under CompassCompact, test bam input)
-    python3 tests/test_bwa.py fastq -profile test_docker (under CompassCompact, test fastq input)
+    python3 tests/test_bwa.py bam  (under CompassCompact, test bam input)
+    python3 tests/test_bwa.py fastq  (under CompassCompact, test fastq input)
 The test will run the bwa nextflow pipeline and compare the output fasta file with expected fasta file.
 '''
 
@@ -42,16 +42,16 @@ class Test_main (unittest.TestCase):
             '--mask_file', str(self.mask_file),
             '--fastq',self.fastq,
             '-resume', 
-            '-with-docker compasscompact'
+            '-profile test_docker'
         ])
-        logging.info(self.cmd)
+        print(self.cmd)
         nextflowprocess = subprocess.Popen(shlex.split(self.cmd))
         nextflowprocess.wait()
 
     #@unittest.skip("only skip for debug purpose")
     def test_nf_run_fastq(self):
         self.fastq = "true"
-        self.pattern = "*_{1,2}P.fastq.gz"
+        self.pattern = "*_{1,2}.fastq.gz"
         self.cmd = ' '.join([
             'nextflow run ', self.nf,
             '--input_dir ', str(self.input_dir) + '/',
@@ -61,7 +61,7 @@ class Test_main (unittest.TestCase):
             '--mask_file', str(self.mask_file),
             '--fastq',self.fastq,
             '-resume',
-            '-with-docker compasscompact'
+            '-profile test_docker'
         ])
         logging.info(self.cmd)
         nextflowprocess = subprocess.Popen(shlex.split(self.cmd))
