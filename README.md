@@ -31,26 +31,28 @@ A nextflow-docker paired pipeline for processing pathogen bacterial sequencing d
 ### 2. Run nextflow with docker images
 ```bash
     nextflow run main_stampy.nf --help
-    nextflow run main_stampy.nf --test
-    nextflow run main_stampy.nf --input_dir tests/data/input_dir/fastqs/ \
-    -with-docker oxfordmmm:compasscompact:{version} \
+    nextflow run main_stampy.nf --test -profile test_docker
+    nextflow run main_stampy.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_2.fasta \
-    --fastq true
-    --pattern "*_{1,2}.fastq.gz"
+    --fastq true \
+    --pattern "*_{1,2}.fastq.gz" \
+    -profile test_docker
 
-    nextflow run main.nf --input_dir tests/data/input_dir/bams/ \
-    -with-docker  oxfordmmm:compasscompact:{version} \
+    nextflow run main_stampy.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_2.fasta \
     --fastq false \
-    --pattern "*.bam"
+    --pattern "*.bam" \
+    -profile test_docker
 ```
 #### Mandatory arguments:
 ```bash
     --input_dir               DIR       path of fastq files, or bam files
     --fastq                   Boolean   Input files are fastq format
-    --pattern                 String    fastq file name pattern, such as "*_{1,2}P.fastq.gz"
+    --pattern                 String    fastq file name pattern, such as "*_{1,2}.fastq.gz"
     --output_dir              DIR       path for transformed fastq files
     --ref                     FILE      reference genome
 ```
@@ -78,12 +80,12 @@ A nextflow-docker paired pipeline for processing pathogen bacterial sequencing d
 ### 2. Generate reference mask array file (will be used in step 3)
 ```bash
     nextflow run mask_ref.nf --help
-    nextflow run mask_ref.nf --test
+    nextflow run mask_ref.nf --test -profile test_docker
     nextflow run mask_ref.nf \
     --output_dir tests/data/output_dir \
-    --ref tests/data/reference/NC_000962_3.fasta \
+    --ref tests/data/reference/NC_000962_2.fasta \
     --mask true \
-    -with-docker oxfordmmm/compasscompact:{version}
+    -profile test_docker
 ```
 #### Mandatory arguments:
 ```bash
@@ -95,28 +97,31 @@ A nextflow-docker paired pipeline for processing pathogen bacterial sequencing d
 ```
 ### 3. Run nextflow with docker images
 ```bash
-    nextflow run main.nf --help
-    nextflow run main.nf --test
-    nextflow run main.nf --input_dir tests/data/input_dir/fastqs/ \
+    nextflow run main_bwa.nf --help
+    nextflow run main_bwa.nf --test
+    nextflow run main_bwa.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_3.fasta \
-    --mask_file tests/data/reference/NC_000962_3_repmask.array \
+    --mask_file "tests/data/reference/NC_000962_3_repmask.array" \
     --fastq true \
-    --pattern "*_{1,2}P.fastq.gz"
+    --pattern "*_{1,2}.fastq.gz" \
+    -profile test_docker
 
-    nextflow run main.nf --input_dir tests/data/input_dir/bams/ \
+    nextflow run main_bwa.nf --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_3.fasta \
-    --mask_file tests/data/reference/NC_000962_3_repmask.array \
+    --mask_file = "tests/data/reference/NC_000962_3_repmask.array" \
     --fastq false \
     --pattern "*.bam" \
-    -with-docker oxfordmmm/compasscompact:{version}
+    -profile test_docker
+
 ```
 #### Mandatory arguments:
 ```bash
     --input_dir               DIR       path of fastq files, or bam files
     --fastq                   Boolean   Input files are fastq format
-    --pattern                 String    fastq file name pattern, such as "*_{1,2}P.fastq.gz"
+    --pattern                 String    fastq file name pattern, such as "*_{1,2}.fastq.gz"
     --output_dir              DIR       path for transformed fastq files
     --ref                     FILE      reference genome
     --mask_file               FILE      reference mask array
