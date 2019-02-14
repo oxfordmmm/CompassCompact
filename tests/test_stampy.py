@@ -39,7 +39,7 @@ class Test_main (unittest.TestCase):
             '--ref', str(self.ref),
             '--fastq',self.fastq,
             '-resume', 
-            '-with-docker compasscompact'
+            '-profile test_docker'
         ])
         logging.info(self.cmd)
         nextflowprocess = subprocess.Popen(shlex.split(self.cmd))
@@ -48,7 +48,7 @@ class Test_main (unittest.TestCase):
     #@unittest.skip("only skip for debug purpose")
     def test_nf_run_fastq(self):
         self.fastq = "true"
-        self.pattern = "*_{1,2}P.fastq.gz"
+        self.pattern = "*_{1,2}.fastq.gz"
         self.cmd = ' '.join([
             'nextflow run ', self.nf,
             '--input_dir ', str(self.input_dir) + '/',
@@ -57,7 +57,7 @@ class Test_main (unittest.TestCase):
             '--ref', str(self.ref),
             '--fastq',self.fastq,
             '-resume',
-            '-with-docker compasscompact'
+            '-profile test_docker'
         ])
         logging.info(self.cmd)
         nextflowprocess = subprocess.Popen(shlex.split(self.cmd))

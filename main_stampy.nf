@@ -3,28 +3,32 @@
 def helpMessage() {
     log.info"""
     =========================================
-                   MMM Compass Next 
+                   MMM Compass Compact
     =========================================
     Usage:
 
     nextflow run main_stampy.nf --help
-    nextflow run main_stampy.nf --test
-    nextflow run main_stampy.nf --input_dir tests/data/input_dir/fastqs/ \
+    nextflow run main_stampy.nf --test -profile test_docker
+    nextflow run main_stampy.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_2.fasta \
-    --fastq true
-    --pattern "*_{1,2}P.fastq.gz"
+    --fastq true \
+    --pattern "*_{1,2}.fastq.gz" \
+    -profile test_docker
 
-    nextflow run main_stampy.nf --input_dir tests/data/input_dir/bams/ \
+    nextflow run main_stampy.nf \
+    --input_dir tests/data/input_dir/ \
     --output_dir tests/data/output_dir \
     --ref tests/data/reference/NC_000962_2.fasta \
     --fastq false \
-    --pattern "*.bam"
+    --pattern "*.bam" \
+    -profile test_docker
 
     Mandatory arguments:
     --input_dir               DIR       path of fastq files, or bam files
     --fastq                   Boolean   Input files are fastq format
-    --pattern                 String    fastq file name pattern, such as "*_{1,2}P.fastq.gz"
+    --pattern                 String    fastq file name pattern, such as "*_{1,2}.fastq.gz"
     --output_dir              DIR       path for transformed fastq files
     --ref                     FILE      reference genome
 
@@ -40,7 +44,7 @@ params.test = false;
 if (params.test){
     params.fastq = true
     params.pattern = "*_{1,2}.fastq.gz"
-    params.input_dir = "tests/data/input_dir/fastqs/"
+    params.input_dir = "tests/data/input_dir/"
     params.output_dir = "tests/data/output_dir"
     params.threads = 8
     params.ref = "tests/data/reference/NC_000962_2.fasta"
@@ -53,14 +57,15 @@ if (params.test){
     params.ref = ""
 }
 
-ref = file(params.ref)
-ref_name = ref.getBaseName()
-
 // Show help emssage
 if (params.help){
     helpMessage()
     exit 0
 }
+
+
+ref = file(params.ref)
+ref_name = ref.getBaseName()
 
 threads = params.threads
 data_path = params.input_dir + params.pattern
