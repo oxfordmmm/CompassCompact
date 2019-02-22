@@ -139,23 +139,30 @@ A nextflow-docker paired pipeline for processing pathogen bacterial sequencing d
 
 ### Bioinformatic tools
 
-bwa-0.7.15	
-https://github.com/lh3/bwa
+    bwa-0.7.15	
+    https://github.com/lh3/bwa
 
-GenomeAnalysisTK-3.7-0	
-https://github.com/broadinstitute/gatk/ 
+    GenomeAnalysisTK-3.7-0	
+    https://github.com/broadinstitute/gatk/ 
 
-ncbi-blast-2.2.23+	https://blast.ncbi.nlm.nih.gov/Blast.cgi
+    ncbi-blast-2.2.23+	
+    https://blast.ncbi.nlm.nih.gov/Blast.cgi
 
-picard-tools-1.123	https://github.com/broadinstitute/picard/
+    picard-tools-1.123	
+    https://github.com/broadinstitute/picard/
 
-stampy-1.0.23	https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3106326/
+    stampy-1.0.23	
+    https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3106326/
 
-samtools-1.4.1	https://github.com/samtools/samtools/releases
+    samtools-1.4.1	
+    https://github.com/samtools/samtools/releases
 
-vcftools_0.1.9	https://vcftools.github.io/downloads.html
+    vcftools_0.1.9	
+    https://vcftools.github.io/downloads.html
 
-The bioinformatic tools listed in  `docker/compass/lib/compass.cfg`
+    All bioinformatic tools are configured in  `docker/compass/lib/compass.cfg`
 
-To debug with different version of tools or parameters, change `nextflow.config` the volume host path from `/home/docker/Code/CompassCompact/docker/compass` to wherever the compass code directory is (typically, where you clone the reponsitory to + `/docker/compass`).
+    To debug with different version of tools or parameters, change `nextflow.config` the volume host path 
+    from    `/home/docker/Code/CompassCompact/docker/compass` 
+    to wherever the compass code directory is (typically, where you clone the reponsitory to + `/docker/compass`).
 
