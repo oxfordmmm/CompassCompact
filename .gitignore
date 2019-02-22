@@ -1,0 +1,13 @@
+docker/gorm-tools
+docker/tools
+docker/compass/*.pyc
+docker/compass/lib/*.pyc
+
+work/
+
+tests/data
+tests/__pycache__
+
+.nextflow/
+.nextflow.log
+.nextflow.log.*
