@@ -41,7 +41,7 @@ def fasta_as_expected(fasta1_gzip,fasta2_gzip):
     print("mismatch_other: {0}".format(len(mismatch_other)))
     print("exact match: {0}%".format(100 * (total_bases - len(mismatch_acgt) - len(mismatch_other)) / total_bases))
     print("match ignoring N/-: {0}%".format(100 * (total_bases - len(mismatch_acgt)) / total_bases))
-    print("total mismatch: {0}%".format(100 * (len(mismatch_acgt) + len(mismatch_other)  / total_bases))) 
+    print("total mismatch: {0}%".format(100 * ((len(mismatch_acgt) + len(mismatch_other))  / total_bases))) 
     print("Two fastas are same: {0}".format(total_bases == exact))
 
     return total_bases == exact
