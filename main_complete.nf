@@ -1,5 +1,3 @@
-params.threads = 8
-
 indir = params.indir
 readpat = params.readpat
 output_dir = params.output_dir
@@ -362,7 +360,7 @@ process bwa {
     set dataset_id, file("${dataset_id}_alignment.sam") into bwa_map
 
     """
-    $BWA/bwa mem -R '@RG\tID:${dataset_id}\tSM:null\tLB:null\tCN:null' -t ${threads} ${ref_dir}/ref.fa ${forward} ${reverse} > ${dataset_id}_alignment.sam
+    $BWA/bwa mem -R '@RG\tID:${dataset_id}\tSM:null\tLB:null\tCN:null' -t ${task.cpus} ${ref_dir}/ref.fa ${forward} ${reverse} > ${dataset_id}_alignment.sam
     """
 }
 
