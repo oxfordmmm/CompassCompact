@@ -342,20 +342,7 @@ process pick_reference {
     """
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 process bwa {
     label "compass"
@@ -367,19 +354,15 @@ process bwa {
     tag { dataset_id }
 
     input:
-    set dataset_id, file(forward), file(reverse), ref_dir, pipeline_name from channel_fastqs_for_bwa
+    set dataset_id, file(forward), file(reverse), ref_dir from channel_fastqs_for_bwa
     when:
     ref_dir != "failed" 
-
-    set dataset_id, file(forward), file(reverse) from compass_bwa_read_pairs
-    file index from bwa_index
-    file ref
 
     output:
     set dataset_id, file("${dataset_id}_alignment.sam") into bwa_map
 
     """
-    $BWA/bwa mem -R '@RG\tID:${dataset_id}\tSM:null\tLB:null\tCN:null' -t ${threads} /data/references/clockwork/qc_vc/Reference.${ref}/ref.fa ${forward} ${reverse} > ${dataset_id}_alignment.sam
+    $BWA/bwa mem -R '@RG\tID:${dataset_id}\tSM:null\tLB:null\tCN:null' -t ${threads} ${ref_dir}/ref.fa ${forward} ${reverse} > ${dataset_id}_alignment.sam
     """
 }
 
@@ -419,7 +402,7 @@ process mpileup {
     set dataset_id, file("${dataset_id}.out.vcf"), file("${dataset_id}.pileup.vcf") into snpcalling
 
     """
-    python $COMPASS_ROOT/nf_mpileup.py -o 40 -e 20 -H 100 -m 2 -F 0.002 -D -S -M0 -q 30 -Q25 -E -c -g -K -L -t0.01 -i -1 -p0.5 -P full -B ${dataset_id}_alignment.bam -R /data/references/clockwork/qc_vc/Reference.${ref}/ref.fa -out ${dataset_id}.out.vcf -outpileup ${dataset_id}.pileup.vcf
+    python $COMPASS_ROOT/nf_mpileup.py -o 40 -e 20 -H 100 -m 2 -F 0.002 -D -S -M0 -q 30 -Q25 -E -c -g -K -L -t0.01 -i -1 -p0.5 -P full -B ${dataset_id}_alignment.bam -R ${ref_dir}/ref.fa -out ${dataset_id}.out.vcf -outpileup ${dataset_id}.pileup.vcf
     """
 }
 
@@ -440,7 +423,7 @@ process annotvcf {
     set dataset_id, file("${dataset_id}.annotvcf.vcf") into annotcvf
 
     """
-    python $COMPASS_ROOT/nf_annotvcf.py -vcf ${dataset_id}.out.vcf -mpileup ${dataset_id}.pileup.vcf -refmask /data/references/compass/mask/${ref}_repmask.array -o ${dataset_id}.annotvcf.vcf -basecall -selfblastR -hqdepthinfo -lgcdepthinfo
+    python $COMPASS_ROOT/nf_annotvcf.py -vcf ${dataset_id}.out.vcf -mpileup ${dataset_id}.pileup.vcf -refmask /data/references/compass/mask/empty_file_repmask.array -o ${dataset_id}.annotvcf.vcf -basecall -selfblastR -hqdepthinfo -lgcdepthinfo
     """
 }
 
