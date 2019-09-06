@@ -1,5 +1,4 @@
-params.cortex_mem_height = 22
-params.minos_max_read_length = 200
+params.threads = 8
 
 indir = params.indir
 readpat = params.readpat
@@ -8,6 +7,7 @@ kraken2_db = file(params.kraken2_db).toAbsolutePath()
 ref = params.ref
 input_filetype = params.input_filetype
 refmap = params.refmap
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
