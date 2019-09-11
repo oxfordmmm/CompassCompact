@@ -1,9 +1,9 @@
 FROM ubuntu:16.04
 
-LABEL version="1.0.2" \
+LABEL version="1.0.3" \
      description="Oxford MMM CompassCompact Pipeline" \
      maintainer="crookscs.it@ndm.ox.ac.uk" \
-     dockerhub="oxfordmmm/compasscompact:v1.0.2"
+     dockerhub="oxfordmmm/compasscompact:v1.0.3"
 
 #Fresh update packages
 RUN apt-get update && \
@@ -40,10 +40,8 @@ RUN add-apt-repository ppa:ubuntu-toolchain-r/test &&\
 
 # #Install Oracle Java 1.7
 WORKDIR /opt
-COPY tools/jre-7u80-linux-x64.tar.gz .
-RUN  tar -xvzf jre-7u80-linux-x64.tar.gz -C . &&\
-     rm "jre-7u80-linux-x64.tar.gz" &&\
-     mv "jre1.7.0_80" java17 &&\
+COPY tools/java17.tar.gz .
+RUN  tar -zxvf java17.tar.gz && \
      update-alternatives --install /usr/bin/java java /opt/java17/bin/java 100
     
 #Install python and libraries
@@ -78,6 +76,16 @@ RUN cd gorm-tools/stampy-1.0.23 &&\
     sed -i 's/-Wl//' makefile &&\
     make
 
+#sqlite
+RUN apt update && \ 
+    apt-get install sqlite3
+
 #Switch User
 USER compass
 ENTRYPOINT [ "/bin/bash" ]
+
+#To Build #docker build -t compasscompact .
+#To Tag   #docker tag compasscompact oxfordmmm/compasscompact:v1.0.3
+#To Push  #docker push oxfordmmm/compasscompact:v1.0.3
+#To Pull  #docker pull oxfordmmm/compasscompact:v1.0.3
+#To transform #singularity build oxfordmmm_compasscompact_v1.0.3.img docker://oxfordmmm/funvcf:v0.1.0
