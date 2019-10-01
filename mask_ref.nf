@@ -52,7 +52,7 @@ if (params.mask == true)
         echo true
         scratch true
 
-        publishDir "${params.output_dir}/ref_mask/${ref.getBaseName()}", mode: "copy" , pattern: "${ref.getBaseName()}*"
+        publishDir "${params.output_dir}/ref_mask/${ref.getBaseName()}", mode: "copy" , pattern: "*"
 
         tag {ref}
 
@@ -60,7 +60,7 @@ if (params.mask == true)
         file ref
         
         output:
-        file("${ref_name}_repmask.array") into mask_ref
+        file("*") into mask_ref
         
         """
         python ${COMPASS_ROOT}/nf_ref_index.py -r ${ref}
