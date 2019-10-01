@@ -356,7 +356,7 @@ process bwa_merge {
     set dataset_id, file("${dataset_id}_alignment.sam"), ref_dir from bwa_map
 
     output:
-    set dataset_id, file("${dataset_id}_alignment.bam"), ref_dir into bwa_merge
+    set dataset_id, file("${dataset_id}_alignment.bam"), file("${dataset_id}_seqstats.txt"), file("${dataset_id}_flagstats.txt"), ref_dir into bwa_merge
 
     """
     python $COMPASS_ROOT/nf_bwa_merge.py -b ${dataset_id}_alignment.sam -o ${dataset_id}_alignment.bam -execute -ss ${dataset_id}_seqstats.txt -fs ${dataset_id}_flagstats.txt
@@ -374,7 +374,8 @@ process mpileup {
     tag {dataset_id}
 
     input:
-    set dataset_id,  file("${dataset_id}_alignment.bam"), ref_dir from bwa_merge
+    set dataset_id, file("${dataset_id}_alignment.bam"), file("${dataset_id}_seqstats.txt"), file("${dataset_id}_flagstats.txt"), ref_dir from bwa_merge
+
 
     output:
     set dataset_id, file("${dataset_id}.out.vcf"), file("${dataset_id}.pileup.vcf"), ref_dir into snpcalling
@@ -399,8 +400,6 @@ process annotvcf {
 
     echo true
     scratch true
-
-    publishDir "${params.output_dir}/{dataset_id}/annotvcf", mode: "copy", pattern: "${dataset_id}*"
 
     tag {dataset_id}
 
@@ -432,12 +431,15 @@ process basecall {
     echo true
     scratch true
 
-    publishDir "${params.output_dir}/${dataset_id}/basecall", mode: "move", pattern: "${dataset_id}*"
+    publishDir "${params.output_dir}/basecall", mode: "copy", pattern: "${dataset_id}*"
 
     tag { dataset_id }
 
     input:
     set dataset_id, file("${dataset_id}.annotvcf.vcf"), ref_dir from annotcvf
+
+    output:
+    set dataset_id, file("*") into basecall
 
     """
     REF_ID=\$(echo $ref_dir | awk -F"/" '{print \$6}' | cut -c 11-)
