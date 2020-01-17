@@ -67,6 +67,10 @@ if (params.help){
 ref = file(params.ref)
 ref_name = ref.getBaseName()
 
+masked_ref = file(params.mask_file)
+masked_ref_folder = masked_ref.getParent()
+masked_ref_name = masked_ref.getBaseName()
+
 threads = params.threads
 data_path = params.input_dir + params.pattern
 
@@ -117,7 +121,8 @@ else{
     .into{ bam_files }
 }
 
-process GenerateMaskReference {
+
+process GenerateIndex {
     memory '4 GB'
 
     scratch true
@@ -130,7 +135,6 @@ process GenerateMaskReference {
     file ref
 
     output:
-    file("${ref_name}_repmask.array") into masked_ref
     set file(ref), file("${ref_name}.stidx"), file("${ref_name}.sthash") into (stampy_index, mpileup_index)
     """
     python ${COMPASS_ROOT}/nf_ref_index.py -r ${ref}
