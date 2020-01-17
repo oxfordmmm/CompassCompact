@@ -88,4 +88,4 @@ ENTRYPOINT [ "/bin/bash" ]
 #To Tag   #docker tag compasscompact oxfordmmm/compasscompact:v1.0.3
 #To Push  #docker push oxfordmmm/compasscompact:v1.0.3
 #To Pull  #docker pull oxfordmmm/compasscompact:v1.0.3
-#To transform #singularity build oxfordmmm_compasscompact_v1.0.3.img docker://oxfordmmm/funvcf:v0.1.0
+#To transform #singularity build oxfordmmm_compasscompact_v1.0.3.img docker://oxfordmmm/compasscompact:v1.0.3
