@@ -220,7 +220,7 @@ process annotvcf {
     echo true
     scratch true
 
-    publishDir "${params.output_dir}/annotvcf", mode: "copy", pattern: "${dataset_id}*"
+    //publishDir "${params.output_dir}/annotvcf", mode: "copy", pattern: "${dataset_id}*"
 
     tag {dataset_id}
 
