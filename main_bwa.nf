@@ -181,6 +181,8 @@ process bwa_merge {
     -execute \
     -ss ${dataset_id}_seqstats.txt \
     -fs ${dataset_id}_flagstats.txt
+
+    rm \$(readlink ${dataset_id}_alignment.sam)
     """
 }
 
@@ -209,6 +211,8 @@ process mpileup {
     -R ${ref} \
     -out ${dataset_id}.out.vcf \
     -outpileup ${dataset_id}.pileup.vcf
+
+    rm \$(readlink ${dataset_id}_alignment.bam)
     """
 }
 
@@ -240,6 +244,9 @@ process annotvcf {
     -refmask ${masked_ref} \
     -o ${dataset_id}.annotvcf.vcf \
     -basecall -selfblastR -hqdepthinfo -lgcdepthinfo
+
+    rm \$(readlink ${dataset_id}.out.vcf)
+    rm \$(readlink ${dataset_id}.pileup.vcf)
     """
 }
 
@@ -270,5 +277,7 @@ process basecall {
     -u ${dataset_id} \
     -refid ${ref_name} \
     -Q30 -q30 -m30 -n5 -S25 -I25 -z -B1 -p -N -f0.35
+
+    rm \$(readlink ${dataset_id}.annotvcf.vcf)
     """
 }
